@@ -40,7 +40,7 @@ class SearchHitIterator implements Iterator, \Countable
     /**
      * @var int
      */
-    protected $count;
+    protected $count = 0;
 
     /**
      * Constructor
@@ -128,7 +128,7 @@ class SearchHitIterator implements Iterator, \Countable
      */
     public function key()
     {
-        return $this->current_hit_index;
+        return $this->current_key;
     }
 
     /**
@@ -152,10 +152,6 @@ class SearchHitIterator implements Iterator, \Countable
      */
     public function count()
     {
-        if ($this->count === null) {
-            $this->rewind();
-        }
-
         return $this->count;
     }
 }

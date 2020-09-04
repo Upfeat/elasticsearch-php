@@ -31,7 +31,7 @@ class SearchResponseIterator implements Iterator
     /**
      * @var int
      */
-    private $current_key;
+    private $current_key = 0;
 
     /**
      * @var array
@@ -52,7 +52,7 @@ class SearchResponseIterator implements Iterator
      * Constructor
      *
      * @param Client $client
-     * @param array  $params  Associative array of parameters
+     * @param array $params Associative array of parameters
      * @see   Client::search()
      */
     public function __construct(Client $client, array $search_params)
@@ -76,7 +76,7 @@ class SearchResponseIterator implements Iterator
     /**
      * Sets the time to live duration of a scroll window
      *
-     * @param  string $time_to_live
+     * @param string $time_to_live
      * @return $this
      */
     public function setScrollTimeout($time_to_live)
@@ -94,12 +94,12 @@ class SearchResponseIterator implements Iterator
     {
         if (!empty($this->scroll_id)) {
             $this->client->clearScroll(
-                array(
+                [
                     'scroll_id' => $this->scroll_id,
-                    'client' => array(
-                        'ignore' => 404
-                    )
-                )
+                    'client' => [
+                        'ignore' => 404,
+                    ],
+                ]
             );
             $this->scroll_id = null;
         }
@@ -128,15 +128,13 @@ class SearchResponseIterator implements Iterator
      */
     public function next()
     {
-        if ($this->current_key !== 0) {
-            $this->current_scrolled_response = $this->client->scroll(
-                array(
-                    'scroll_id' => $this->scroll_id,
-                    'scroll'    => $this->scroll_ttl
-                )
-            );
-            $this->scroll_id = $this->current_scrolled_response['_scroll_id'];
-        }
+        $this->current_scrolled_response = $this->client->scroll(
+            [
+                'scroll_id' => $this->scroll_id,
+                'scroll' => $this->scroll_ttl,
+            ]
+        );
+        $this->scroll_id = $this->current_scrolled_response['_scroll_id'];
         $this->current_key++;
     }
 
